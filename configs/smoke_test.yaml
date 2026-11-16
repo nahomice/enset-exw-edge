@@ -1,0 +1,50 @@
+# Very small run for checking that everything is wired (minutes, not hours). Results are meaningless.
+seed: 1
+
+paths:
+  data_dir: data/synthetic_smoke
+  tiles_dir: data/processed/smoke_tiles
+  results_dir: results/smoke_tiny
+
+synthetic:
+  n_sites: 12
+  farms_per_site: 1
+  scenes_per_farm: 2
+  width: 480
+  height: 360
+  plant_scale: 1.875
+  n_styles: 4
+  holdout_styles: [3]
+  frac_boxed: 0.7
+  box_jitter_px: 3
+
+tiles:
+  size: 96
+  stride: 48
+  box_frac: 0.5
+  ignore_frac: 0.1
+  bg_keep_ratio: 3.0
+
+split:
+  group_by: site_id
+  train: 0.70
+  val: 0.15
+  test: 0.15
+
+model:
+  width: 1.0
+  max_params: 200000
+
+train:
+  epochs: 2
+  batch_size: 32
+  lr: 0.001
+  patience: 2
+  seeds: [0]
+
+quant:
+  n_calib: 60
+  max_drop_pp: 2.0
+
+farm:
+  tile_prob_threshold: 0.5

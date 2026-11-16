@@ -1,0 +1,5 @@
+filename,site_id,farm_id,date,farm_label,tier,phone_model,distance_m_estimate,weather,notes
+IMG_0001.jpg,S01,F001,2026-12-05,healthy,1,Samsung A13,8,sunny,field edge front view
+IMG_0002.jpg,S01,F001,2026-12-05,healthy,1,Samsung A13,10,sunny,second position
+IMG_0010.jpg,S02,F004,2026-12-06,exw_suspect,2,Samsung A13,8,cloudy,expert confirmed on site
+IMG_0020.jpg,S03,F009,2026-12-07,other_condition,2,Samsung A13,9,sunny,drought stress not EXW

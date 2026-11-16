@@ -1,0 +1,51 @@
+# Configuration for REAL wide-view images (after `python scripts/ingest_real.py --src <folder> --out data/real`).
+# Copy of default.yaml with real-data paths; edit tile size AFTER looking at real photo resolution (docs/DATA_PROTOCOL.md).
+seed: 42
+
+paths:
+  data_dir: data/real
+  tiles_dir: data/processed/real_tiles
+  results_dir: results/real
+
+synthetic:                  # unused for real data; kept so the config keys stay identical to default.yaml
+  n_sites: 32
+  farms_per_site: 2
+  scenes_per_farm: 6
+  width: 960
+  height: 720
+  plant_scale: 1.875
+  n_styles: 4
+  holdout_styles: [3]
+  frac_boxed: 0.6
+  box_jitter_px: 3
+
+tiles:
+  size: 96                  # [EDIT after seeing real data] plants should span roughly one tile
+  stride: 48
+  box_frac: 0.5
+  ignore_frac: 0.1
+  bg_keep_ratio: 3.0
+
+split:
+  group_by: site_id         # or farm_id / date; ingest_real.py performs the split
+  train: 0.70
+  val: 0.15
+  test: 0.15
+
+model:
+  width: 1.0
+  max_params: 200000
+
+train:
+  epochs: 40
+  batch_size: 64
+  lr: 0.001
+  patience: 6
+  seeds: [0, 1, 2]
+
+quant:
+  n_calib: 300
+  max_drop_pp: 2.0
+
+farm:
+  tile_prob_threshold: 0.5

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EXW Scout</string>
+    <string name="pick_image">Choose farm photo</string>
+    <string name="analyzing">Analyzing…</string>
+    <string name="result_flagged">FLAG for expert inspection</string>
+    <string name="result_clear">No flag (this is not a diagnosis)</string>
+    <string name="disclaimer">Screening aid only. An expert must confirm any flagged area.</string>
+</resources>

@@ -1,0 +1,56 @@
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# ---- data: NOTHING real is ever committed (images, labels with farm identifiers) ----
+data/synthetic/
+data/real/
+data/processed/
+data/raw/*
+data/interim/*
+data/external/*
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/external/.gitkeep
+!data/external/README.md
+
+# ---- results and models ----
+results/*
+!results/.gitkeep
+!results/README.md
+*.keras
+*.tflite
+*.npz
+*.mem
+# small golden test vectors for RTL simulation are the one exception
+!fpga/sim/vectors/*.mem
+
+# ---- Quartus / ModelSim / Questa build products ----
+fpga/**/db/
+fpga/**/incremental_db/
+fpga/**/output_files/
+fpga/**/qdb/
+fpga/**/*.rpt
+fpga/**/*.sof
+fpga/**/*.rbf
+fpga/**/*.summary
+fpga/**/*.smsg
+fpga/**/*.jdi
+fpga/sim/work/
+fpga/sim/transcript
+fpga/sim/vsim.wlf
+fpga/hls/**/*.prj/
+
+# ---- Android ----
+android/**/build/
+android/.gradle/
+android/local.properties
+android/**/*.apk
+android/**/*.aab
+android/app/src/main/assets/*.tflite
+.idea/
+data_npy/

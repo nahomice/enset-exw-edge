@@ -1,0 +1,54 @@
+# Default configuration. Every experiment reads a config file like this one, so a result
+# can always be reproduced from (git commit + config file + seed).
+seed: 42
+
+paths:
+  data_dir: data/synthetic          # images + annotations + manifest are written here
+  tiles_dir: data/processed/tiles   # tile arrays (npz) per split
+  results_dir: results/smoke        # models, metrics, figures of this run
+
+# ---- synthetic wide-view scenes (Tier 0 data: pipeline and hardware tests only) ----
+synthetic:
+  n_sites: 32
+  farms_per_site: 2
+  scenes_per_farm: 6
+  width: 960
+  height: 720
+  plant_scale: 1.875          # plants are drawn this many times larger than in the 512-px design (tile/plant scale!)
+  n_styles: 4                # appearance styles (soil, light, blur); one is held out for a shift test
+  holdout_styles: [3]
+  frac_boxed: 0.6            # share of images that carry coarse boxes (the rest: farm-level label only)
+  box_jitter_px: 3           # coarse annotation noise
+
+# ---- tiling and tile-label rule (documented in docs/DATA_PROTOCOL.md) ----
+tiles:
+  size: 96
+  stride: 48
+  box_frac: 0.5              # a tile takes a box label if >= 50 % of the TILE lies inside the box
+  ignore_frac: 0.1           # 10-50 % overlap -> ignored in training
+  bg_keep_ratio: 3.0         # training: keep at most 3 background tiles per suspect tile
+
+split:
+  group_by: site_id          # whole sites never cross splits (farm/site/date grouping)
+  train: 0.70
+  val: 0.15
+  test: 0.15
+
+model:
+  width: 1.0                 # channel multiplier; parameters must stay below 200 000
+  max_params: 200000
+
+train:
+  epochs: 25
+  batch_size: 64
+  lr: 0.001
+  patience: 5
+  seeds: [0, 1, 2]
+
+quant:
+  n_calib: 300               # calibration tiles, taken from the TRAIN split only
+  max_drop_pp: 2.0           # if INT8 loses more than this, use QAT
+
+farm:
+  tile_prob_threshold: 0.5   # tile counts as flagged if P(EXW-suspect) >= this
+  # the risk-score threshold is chosen on the validation split only
