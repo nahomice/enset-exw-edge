@@ -24,27 +24,30 @@ def _ch(c: int, width: float) -> int:
     return max(8, int(round(c * width / 8)) * 8)
 
 
-def build_tilecnn(size: int = 96, width: float = 1.0, n_classes: int = N_CLASSES,
-                  batch_size: int | None = None) -> tf.keras.Model:
+def build_tilecnn(
+    size: int = 96, width: float = 1.0, n_classes: int = N_CLASSES, batch_size: int | None = None
+) -> tf.keras.Model:
     L = tf.keras.layers
     inp = L.Input((size, size, 3), batch_size=batch_size, name="tile")
     x = L.Conv2D(_ch(16, width), 3, strides=2, padding="same", use_bias=False, name="conv1")(inp)
-    x = L.BatchNormalization(name="bn1")(x)
+    x = L.BatchNormalization(momentum=0.9, name="bn1")(x)
     x = L.ReLU(6.0, name="relu1")(x)
     fmap = size // 2
 
     for i, (ch, stride) in enumerate([(32, 1), (64, 2), (128, 2), (256, 2)], start=1):
         x = L.DepthwiseConv2D(3, strides=stride, padding="same", use_bias=False, name=f"dw{i}")(x)
-        x = L.BatchNormalization(name=f"dw{i}_bn")(x)
+        x = L.BatchNormalization(momentum=0.9, name=f"dw{i}_bn")(x)
         x = L.ReLU(6.0, name=f"dw{i}_relu")(x)
         x = L.Conv2D(_ch(ch, width), 1, use_bias=False, name=f"pw{i}")(x)
-        x = L.BatchNormalization(name=f"pw{i}_bn")(x)
+        x = L.BatchNormalization(momentum=0.9, name=f"pw{i}_bn")(x)
         x = L.ReLU(6.0, name=f"pw{i}_relu")(x)
         fmap = (fmap + stride - 1) // stride
 
-    x = L.AveragePooling2D(pool_size=fmap, name="gap")(x)   # global average pooling as a plain pool op
+    x = L.AveragePooling2D(pool_size=fmap, name="gap")(
+        x
+    )  # global average pooling as a plain pool op
     x = L.Reshape((x.shape[-1],), name="flatten")(x)
-    out = L.Dense(n_classes, name="logits")(x)              # logits (softmax is applied outside the model)
+    out = L.Dense(n_classes, name="logits")(x)  # logits (softmax is applied outside the model)
     return tf.keras.Model(inp, out, name="tilecnn")
 
 
